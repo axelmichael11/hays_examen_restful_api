@@ -17,22 +17,52 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cors());
 
+
+
+
+
+
+
+
 const state = {
     isOn: false, 
     http: null,
 }
 
 const server = module.exports = {};
+server.isOn = false;
 
-server.start = () => {
+server.start = () => {  
     return new Promise((resolve, reject) => {
-      if (state.isOn) 
-          return reject(new Error('USAGE ERROR: the state is on'));
-        state.http = app.listen(process.env.PORT, () => {
-          DB.start();
-          console.log('__SERVER_UP__', process.env.PORT);
-          
-          resolve()
+      console.log("STATE", server.inOn);
+      if (server.isOn) {
+        return reject(new Error(500));
+      } else {
+        server.isOn = true;
+        server.http = app.listen(process.env.PORT, () => {
+        DB.start();
+        console.log('__SERVER_UP__', process.env.PORT);
+        resolve();
         })
+        return;
+      }
+    })
+}
+
+
+server.stop = () => {
+  return new Promise((resolve, reject) => {
+    console.log("STATE", server.isOn);
+    if (!server.http && !server.isOn) {
+      return reject(new Error(500));
+    } else {
+      console.log("turning off server")
+      return server.http.close((res, err) => {
+        server.isOn = false;
+        resolve();
+        return;
+      })
+    }
+    
   })
 }

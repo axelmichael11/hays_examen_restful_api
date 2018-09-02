@@ -17,7 +17,7 @@
 #To do List
 
 - [] hotel json data to the database
-    - {} upload data on api server start... POST
+    - {x} upload data on api server start... POST
         - || tests
     - {} send data from database GET
         - || tests

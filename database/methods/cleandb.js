@@ -1,9 +1,10 @@
 'use strict';
 
-const Hotel = require('../models/hotel.js');
+const mongoose = require('mongoose');
+const cleanDB = {};
 
-module.exports = () =>{
-  return Promise.all([
-    Hotel.deleteMany({}),
-  ]);
-};
+cleanDB.start = function(){
+    mongoose.connection.dropDatabase();
+}
+
+module.exports = cleanDB;
