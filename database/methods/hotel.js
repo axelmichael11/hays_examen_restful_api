@@ -7,53 +7,59 @@ const mongoose = require('mongoose');
 const hotelImageFolder = '/../../recursos/assets/images/hotels/';
 
 hotelMethods.insertHotelDataOnStart = function(){
-    return mongoose.connection.once( 'open', function callback() {
-            let dataBaseEmpty = Hotel.findOne()
+    
+    mongoose.connection.once( 'open', function callback() {
+            return Hotel.findOne()
             .then((hotel)=>{
                 if (!hotel){
                     console.log('PUTTING IN DB')
-                    hotelMethods.saveImagesAndJsonData();
+                    hotelMethods.saveJsonAndImagesOnStart()
+                    .then(result=>{
+                        console.log('images and data stored in DB')
+                        return result;
+                    })
+                    .catch(err=>{
+                        console.log('err storing hotels',err)
+                    })
                 } else {
                     console.log('Hotels already in DB')
+                    return;
                 }
             })
-            .catch(err=>console.log(err));
+            .catch(err=>console.log(err));    
+        })
+        
+}
+
+hotelMethods.saveJsonAndImagesOnStart = function(){
+    return hotelMethods.reducedAsync(Object.keys(hotelData), function(hotel){
+        return hotel.save()
     })
 }
 
 
-hotelMethods.saveImagesAndJsonData = function(){
-
-    let hotelsToSave = [];
-
-
-    for (let i in hotelData) {
-        let image = hotelData[i].image;
-        let imagePath = hotelImageFolder+image;
-        // console.log(imagePath);
-        let hotel = new Hotel({
+hotelMethods.reducedAsync = function (array, asyncFunc) {
+        return array.reduce((previous, current, i) => {
+            let image = hotelData[i].image;
+            let imagePath = hotelImageFolder+image;
+            let hotel = new Hotel({
             id: hotelData[i].id,
             name: hotelData[i].name,
             price:hotelData[i].price,
             imageName: image,
             img: { data: fs.readFileSync(__dirname+ imagePath), contentType:'image/jpeg'}
         })
-        console.log('HOTEL@@@', hotel);
-        hotelsToSave.push(hotel);
-    }
-
-
-    hotelsToSave.reduce( (p, hotel, i) => {
-        console.log('HOTEL', p, hotel, i)
-        return hotel.save()
-            .then(()=>{
-                console.log("hotel stored", i);
+          return previous.then(accumulator => {
+            return asyncFunc(hotel).then(result => {
+                console.log('STORED');
+                return accumulator.concat(result)
             })
-            .catch(err=>console.log("ERROR SAVING HOTEL: ",i, err))
-    }
-, Promise.resolve() );
-
-}
-
+            .catch(err=>{
+                console.log('NOT STORED', err)
+            })
+          })
+          .catch(err=>console.log(err));
+        }, Promise.resolve([]));
+      }
 
 module.exports = hotelMethods;

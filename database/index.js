@@ -5,13 +5,6 @@ const hotelMethods = require('./methods/hotel');
 const cleanDB = require('./methods/cleandb');
 const DB = {};
 
-// DB.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true,  useCreateIndex: true}, );
-
-// DB.connection.on('start', ()=>{
-//     console.log('hitting hotels!')
-//     hotelMethods.saveImagesAndJsonData();
-// });
-
 DB.start = function(){
 
     return new Promise((resolve, reject)=>{
