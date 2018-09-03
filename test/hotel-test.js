@@ -17,9 +17,7 @@ let API_URL = process.env.API_URL;
 
 describe('testing hotel insertion', () => {
   before(server.start);
-  after(server.stop);
-//   afterEach(cleanDB.start);
-  
+  after(server.stop);  
 
     describe('testing inserting json and pictures into database...', (done) => {
         it('should return a hotel after insertion... checking types....', (done) => {
@@ -45,7 +43,6 @@ describe('testing hotel insertion', () => {
         it.only('should return a hotel after insertion... checking types....', (done) => {
             hotelMethods.saveJsonAndImagesOnStart()
             .then(result=>{
-                // console.log('RESULT of insert hotel method',result)
                 console.log(result.length, " should be equal",hotelData.length);
                 expect(result.length).toEqual(hotelData.length);
                 done()
