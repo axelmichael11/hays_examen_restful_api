@@ -15,11 +15,16 @@
 
 # To Measure scalability...
 
-# Setup NGIX
+# Setup NGIX (?)
 
 1. Install ngix with homebrew...
+brew install nginx
 
-2. 
+
+2. start nginx
+sudo nginx 
+
+3. 
 
 #Setup PM2
 1. install pm2 "npm i pm2" or preferred globally
@@ -51,6 +56,24 @@ pm2 start index.js -i max
 
 4. "pm2 list" to measure cpu...
 
+#Enable Cluster processes 
+
+
+1. "pm2 ecosystem" to generate config file
+
+
+2. pm2 start index.js -i max
+
+3. 
+PM2] Applying action restartProcessId on app [index](ids: 0)
+[PM2] [index](0) ✓
+[PM2] Process successfully started
+┌──────────┬────┬──────┬───────┬────────┬─────────┬────────┬─────┬───────────┬────────────────┬──────────┐
+│ App name │ id │ mode │ pid   │ status │ restart │ uptime │ cpu │ mem       │ user           │ watching │
+├──────────┼────┼──────┼───────┼────────┼─────────┼────────┼─────┼───────────┼────────────────┼──────────┤
+│ index    │ 0  │ fork │ 61496 │ online │ 777     │ 0s     │ 0%  │ 14.2 MB   │ michaelaxelson │ disabled │
+└──────────┴────┴──────┴───────┴────────┴─────────┴────────┴─────┴───────────┴────────────────┴──────────┘
+
 
 
 
@@ -70,12 +93,18 @@ pm2 start index.js -i max
 - [] 
     - {} send data from database GET
         - || tests
-    
 
 - Scalability
-- []
+- [X]
     - {} install NGIX reverse proxy
-    - {} idea of clusters for nodejs...
+        ^ http://pm2.keymetrics.io/docs/tutorials/pm2-nginx-production-setup for this... configuration is DIFFERENT ON LOCAL HOST... NOT SAFE FOR development mode!
+    - {X} idea of clusters for nodejs...
+    NOTE: For development, localhost development cluster mode can be replicated running
+    "npm run cluster start"
+    
+    stop cluster running with
+    "npm run cluster stop"
+    
 
 
 

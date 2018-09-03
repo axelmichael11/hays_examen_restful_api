@@ -8,7 +8,9 @@
     "test": "test"
   },
   "scripts": {
-    "start": "nodemon index.js",
+    "start":"nodemon index.js",
+    "start cluster": "pm2 start index.js -i max",
+    "stop cluster":"pm2 stop all",
     "test": "nyc mocha"
   },
   "repository": {
