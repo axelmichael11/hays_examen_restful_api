@@ -8,6 +8,7 @@ const express = require('express');
 require('dotenv').config();
 const hotelMethods = require('../database/methods/hotel')
 const DB  = require('../database/index');
+const port =  process.argv[2] || process.env.PORT;
 
 
 
@@ -18,34 +19,38 @@ app.use(morgan('dev'));
 app.use(cors());
 
 
+app.get('*', (req, res) => {
+  res.status(400);
+  res.send('WELCOME TO THE HOTEL API!');
+});
 
 
-
-
-
-
-const state = {
-    isOn: false, 
-    http: null,
-}
+// const state = {
+//     isOn: false, 
+//     http: null,
+// }
 
 const server = module.exports = {};
 server.isOn = false;
 
 server.start = () => {  
     return new Promise((resolve, reject) => {
-      console.log("STATE", server.inOn);
+      console.log("STATE", server.isOn);
       if (server.isOn) {
         return reject(new Error(500));
-      } else {
+      }
         server.isOn = true;
-        server.http = app.listen(process.env.PORT, () => {
+        server.http = app.listen(port, () => {
         DB.start();
-        console.log('__SERVER_UP__', process.env.PORT);
-        resolve();
+        return resolve();
         })
         return;
-      }
+    })
+    .then(()=>{
+      console.log('__SERVER_UP__', port);
+    })
+    .catch(err=>{
+      console.log('ERORR', err)
     })
 }
 
@@ -59,10 +64,9 @@ server.stop = () => {
       console.log("turning off server")
       return server.http.close((res, err) => {
         server.isOn = false;
-        resolve();
+        return resolve();
         return;
       })
     }
-    
   })
 }

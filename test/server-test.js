@@ -18,7 +18,7 @@ describe('testing server', () => {
         console.log('test DONE')
       });
   });
-  it('should return 500 error for stopping the server when already off.... ', () => {
+  it.only('should return 500 error for stopping the server when already off.... ', () => {
     server.stop();
     server.stop().catch(err=>{
         console.log(err);

@@ -40,7 +40,7 @@ describe('testing hotel insertion', () => {
                     done();
                 })
         });
-        it.only('should return a hotel after insertion... checking types....', (done) => {
+        it('should return a hotel after insertion... checking types....', (done) => {
             hotelMethods.saveJsonAndImagesOnStart()
             .then(result=>{
                 console.log(result.length, " should be equal",hotelData.length);
